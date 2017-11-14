@@ -1,0 +1,7 @@
+*.userprefs
+*.usertasks
+*.pidb
+*.resources
+test-results/
+**/bin/*
+**/obj/*
