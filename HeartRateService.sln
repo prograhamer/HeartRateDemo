@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeartRateService", "HeartRateService\HeartRateService.csproj", "{4C1C13A5-43D0-4173-BE65-96FD7DAF2088}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Truant", "Truant\Truant\Truant.csproj", "{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,5 +15,9 @@ Global
 		{4C1C13A5-43D0-4173-BE65-96FD7DAF2088}.Debug|x86.Build.0 = Debug|x86
 		{4C1C13A5-43D0-4173-BE65-96FD7DAF2088}.Release|x86.ActiveCfg = Release|x86
 		{4C1C13A5-43D0-4173-BE65-96FD7DAF2088}.Release|x86.Build.0 = Release|x86
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{9011A0CE-9A66-4066-83DA-7A4C2601B2F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
