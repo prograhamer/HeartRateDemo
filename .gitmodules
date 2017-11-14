@@ -1,0 +1,3 @@
+[submodule "Truant"]
+	path = Truant
+	url = git@github.com:prograhamer/Truant
