@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Net;
 using System.Text;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 using Truant;
 using Truant.Devices;
@@ -16,7 +17,7 @@ namespace HeartRateService
 		private const byte NETWORK_NO = 0;
 		private static bool _Exit = false;
 		private const long MINIMUM_POST_INTERVAL = 2500;
-		private static Dictionary<ushort, long> LastPostTicks = new Dictionary<ushort, long>();
+		private static ConcurrentDictionary<ushort, long> LastPostTicks = new ConcurrentDictionary<ushort, long>();
 
 		private static void handleInterrupt(object sender, ConsoleCancelEventArgs args)
 		{
@@ -26,15 +27,19 @@ namespace HeartRateService
 
 		public static void Main(string[] args)
 		{
+			TextWriterTraceListener myWriter = new TextWriterTraceListener(Console.Out);
+			Debug.Listeners.Add(myWriter);
+
 			Console.CancelKeyPress += handleInterrupt;
 
 			var connection = AntPlusConnection.GetConnection(DEVICE_ID, NETWORK_NO);
 
-			HeartRateMonitor[] hrMonitors = { new HeartRateMonitor(), new HeartRateMonitor() };
+			HeartRateMonitor[] hrMonitors = { new HeartRateMonitor(), new HeartRateMonitor(), new HeartRateMonitor() };
 			hrMonitors[0].Config = new DeviceConfig(12029, 1);
-			hrMonitors[1].Config = new DeviceConfig(47330, 1);
+			hrMonitors[1].Config = new DeviceConfig(2515, 1);
+			hrMonitors[2].Config = new DeviceConfig(47330, 1);
 
-			foreach (HeartRateMonitor hrm in hrMonitors) {
+			foreach (var hrm in hrMonitors) {
 				hrm.AddNewDataCallback(ProcessHeartRateData);
 			}
 
@@ -57,7 +62,7 @@ namespace HeartRateService
 					new TimeSpan(DateTime.UtcNow.Ticks - LastPostTicks[deviceId]).TotalMilliseconds >= MINIMUM_POST_INTERVAL) {
 					LastPostTicks[deviceId] = DateTime.UtcNow.Ticks;
 
-					new Thread(() => PostData(deviceId, hrData.ComputedHeartRate)).Start();
+					ThreadPool.QueueUserWorkItem((object _) => PostData(deviceId, hrData.ComputedHeartRate));
 				}
 			}
 		}
@@ -66,7 +71,7 @@ namespace HeartRateService
 		{
 			var json = $"{{\"type\":\"HeartRate\",\"id\":\"{id}\",\"value\":{value} }}";
 
-			Console.WriteLine("POSTING: {0}", json);
+			Console.WriteLine("{0}: POSTING: {1}", DateTime.Now, json);
 
 			try {
 				var request = WebRequest.Create(REPORTING_URL);
